@@ -4,11 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Insurance Needs Analyser — Bajaj Capital</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23003399' d='M16 2L4 7v9c0 6.5 5.2 12.4 12 14 6.8-1.6 12-7.5 12-14V7L16 2zm0 4.2l8 3.3v6.7c0 4.8-3.6 9.2-8 10.6-4.4-1.4-8-5.8-8-10.6V9.5l8-3.3z'/%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23ED1A25' d='M16 2L4 7v9c0 6.5 5.2 12.4 12 14 6.8-1.6 12-7.5 12-14V7L16 2zm0 4.2l8 3.3v6.7c0 4.8-3.6 9.2-8 10.6-4.4-1.4-8-5.8-8-10.6V9.5l8-3.3z'/%3E%3C/svg%3E" />
   <style>
     :root {
-      --brand: #003399;
-      --brand-light: #1a4db3;
+      --brand: #ed1a25;
+      --brand-accent: #f8d908;
+      --brand-light: #f04a52;
       --gray-50: #f9fafb;
       --gray-100: #f3f4f6;
       --gray-200: #e5e7eb;
@@ -17,9 +18,9 @@
       --gray-900: #111827;
       --green: #059669;
       --amber: #d97706;
-      --red: #dc2626;
+      --red: #ed1a25;
       --ai-bg: #f3f4f6;
-      --user-bg: #003399;
+      --user-bg: #ed1a25;
     }
 
     * {
@@ -98,7 +99,7 @@
 
     .progress-bar-fill {
       height: 100%;
-      background: var(--brand);
+      background: linear-gradient(90deg, var(--brand) 0%, var(--brand-accent) 100%);
       border-radius: 999px;
       width: 25%;
       transition: width 0.35s ease;
@@ -184,11 +185,34 @@
       color: #fff;
     }
 
+    #genderGroup .toggle-btn:hover,
+    #smokerGroup .toggle-btn:hover,
+    #employerGroup .toggle-btn:hover {
+      border-color: var(--brand-accent);
+    }
+
+    #genderGroup .toggle-btn.selected,
+    #smokerGroup .toggle-btn.selected,
+    #employerGroup .toggle-btn.selected {
+      background: var(--brand-accent);
+      border-color: var(--brand-accent);
+      color: var(--gray-900);
+    }
+
     .actions {
       display: flex;
       gap: 0.75rem;
       flex-wrap: wrap;
       margin-top: 1.25rem;
+    }
+
+    .step-panel > .card {
+      margin-bottom: 0;
+    }
+
+    .step-panel > .actions {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
     }
 
     .btn {
@@ -498,9 +522,37 @@
       padding: 0.65rem 0.85rem;
       border-radius: 12px;
       font-size: 0.875rem;
-      line-height: 1.45;
-      white-space: pre-wrap;
+      line-height: 1.5;
       word-break: break-word;
+      white-space: normal;
+    }
+
+    .msg.ai strong {
+      font-weight: 700;
+      color: var(--gray-900);
+    }
+
+    .msg.ai .msg-p {
+      margin: 0 0 0.5rem;
+    }
+
+    .msg.ai .msg-p:last-child {
+      margin-bottom: 0;
+    }
+
+    .msg.ai .msg-list {
+      margin: 0.35rem 0 0.5rem;
+      padding-left: 1.15rem;
+      list-style-type: decimal;
+    }
+
+    .msg.ai .msg-list li {
+      margin-bottom: 0.4rem;
+      padding-left: 0.25rem;
+    }
+
+    .msg.ai .msg-list li:last-child {
+      margin-bottom: 0;
     }
 
     .msg.ai {
@@ -515,6 +567,7 @@
       background: var(--user-bg);
       color: #fff;
       border-bottom-right-radius: 4px;
+      white-space: pre-wrap;
     }
 
     .typing {
@@ -565,17 +618,19 @@
       font-size: 0.75rem;
       padding: 0.4rem 0.65rem;
       border-radius: 999px;
-      border: 1px solid var(--gray-200);
-      background: #fff;
+      border: 1px solid var(--brand-accent);
+      background: #fef9c3;
       cursor: pointer;
       font-family: inherit;
-      color: var(--brand);
+      color: var(--gray-900);
       font-weight: 500;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
     }
 
     .chip:hover {
-      border-color: var(--brand);
-      background: #f0f4ff;
+      background: var(--brand-accent);
+      border-color: var(--brand-accent);
+      color: var(--gray-900);
     }
 
     .chat-input-row {
@@ -631,7 +686,8 @@
     </div>
 
     <!-- Step 1 -->
-    <div class="card step-panel active" id="step1" data-step="1">
+    <div class="step-panel active" id="step1" data-step="1">
+    <div class="card">
       <h2>Personal details</h2>
       <div class="field">
         <label for="fullName">Full name</label>
@@ -663,13 +719,15 @@
           <button type="button" class="toggle-btn" data-value="yes">Yes</button>
         </div>
       </div>
+    </div>
       <div class="actions">
         <button type="button" class="btn btn-primary" id="toStep2">Continue</button>
       </div>
     </div>
 
     <!-- Step 2 -->
-    <div class="card step-panel" id="step2" data-step="2">
+    <div class="step-panel" id="step2" data-step="2">
+    <div class="card">
       <h2>Income &amp; family</h2>
       <div class="field">
         <label for="annualIncome">Annual income (INR)</label>
@@ -690,6 +748,7 @@
           <button type="button" class="toggle-btn selected" data-value="yes">Yes</button>
         </div>
       </div>
+    </div>
       <div class="actions">
         <button type="button" class="btn btn-secondary" id="backTo1">Back</button>
         <button type="button" class="btn btn-primary" id="toStep3">Continue</button>
@@ -697,7 +756,8 @@
     </div>
 
     <!-- Step 3 -->
-    <div class="card step-panel" id="step3" data-step="3">
+    <div class="step-panel" id="step3" data-step="3">
+    <div class="card">
       <h2>Existing cover</h2>
       <p class="crm-note">Data pre-filled from CRM in the live version — confirm or update below</p>
       <div class="field">
@@ -717,6 +777,7 @@
         <input type="number" id="incomeHeldInput" min="0" value="0" />
       </div>
       <p class="hint">Employer cover is added automatically if toggled on in Step 2</p>
+    </div>
       <div class="actions">
         <button type="button" class="btn btn-secondary" id="backTo2">Back</button>
         <button type="button" class="btn btn-primary" id="toResults">See results</button>
@@ -724,7 +785,8 @@
     </div>
 
     <!-- Step 4 -->
-    <div class="card step-panel" id="step4" data-step="4">
+    <div class="step-panel" id="step4" data-step="4">
+    <div class="card">
       <h2>Your protection snapshot</h2>
       <div class="results-hero">
         <div class="ring-wrap">
@@ -782,8 +844,8 @@
         </div>
         <p class="chat-error" id="chatError" hidden></p>
       </div>
-
-      <div class="actions" style="margin-top:1rem;">
+    </div>
+      <div class="actions">
         <button type="button" class="btn btn-secondary" id="backTo3">Edit inputs</button>
       </div>
     </div>
@@ -794,7 +856,9 @@
   </div>
 
   <script>
-    const API_KEY = ''; // Paste your Anthropic API key here
+    // Paste your Gemini API key for local testing; avoid committing real keys to git.
+    const API_KEY = '';
+    const GEMINI_MODEL = 'gemini-2.5-flash-lite';
 
     const CIRCUMFERENCE = 2 * Math.PI * 42;
 
@@ -1057,7 +1121,7 @@
     function ringColor(score) {
       if (score >= 70) return '#059669';
       if (score >= 45) return '#d97706';
-      return '#dc2626';
+      return '#ed1a25';
     }
 
     function renderResultsVisuals() {
@@ -1128,11 +1192,62 @@
       chatHistory.push({ role: 'assistant', content: text });
     }
 
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    /** Renders **bold**, numbered lists, and line breaks for AI replies (safe HTML). */
+    function formatAiMessageHtml(raw) {
+      const withBold = escapeHtml(String(raw)).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      const lines = withBold.split('\n');
+      const out = [];
+      let i = 0;
+      while (i < lines.length) {
+        const line = lines[i];
+        if (/^\s*(\d+)\.\s+/.test(line)) {
+          const items = [];
+          while (i < lines.length) {
+            const m = lines[i].match(/^\s*(\d+)\.\s+(.*)$/);
+            if (!m) break;
+            items.push(m[2]);
+            i++;
+          }
+          out.push(
+            '<ol class="msg-list">' +
+              items.map(function (li) {
+                return '<li>' + li + '</li>';
+              }).join('') +
+              '</ol>'
+          );
+          continue;
+        }
+        if (line.trim() === '') {
+          i++;
+          continue;
+        }
+        const para = [];
+        while (i < lines.length && lines[i].trim() !== '' && !/^\s*\d+\.\s+/.test(lines[i])) {
+          para.push(lines[i]);
+          i++;
+        }
+        out.push('<p class="msg-p">' + para.join('<br>') + '</p>');
+      }
+      return out.join('');
+    }
+
     function appendMessage(role, text) {
       const box = document.getElementById('chatMessages');
       const div = document.createElement('div');
       div.className = 'msg ' + (role === 'user' ? 'user' : 'ai');
-      div.textContent = text;
+      if (role === 'user') {
+        div.textContent = text;
+      } else {
+        div.innerHTML = formatAiMessageHtml(text);
+      }
       box.appendChild(div);
       box.scrollTop = box.scrollHeight;
     }
@@ -1225,20 +1340,29 @@
         'Top recommendations already shown to the customer:\n' +
         (recLines || 'None — cover looks adequate.') +
         '\n\n' +
-        'Answer questions about this customer\'s insurance gaps in simple, warm language. Use Indian context (INR, Indian products). Keep replies under 120 words.'
+        'How to answer:\n' +
+        '- Use plain English in short sentences. Mention amounts in INR (lakhs/crores when natural).\n' +
+        '- Prioritise: address the worst coverage gaps first (lowest % or highest shortfall), then others.\n' +
+        '- Where helpful, name typical Indian product types only (no insurer or plan names): e.g. pure term life / term plan; family floater or individual mediclaim; super top-up for higher hospitalisation limits; critical illness as a rider on term or standalone CI policy; income/disability riders where relevant.\n' +
+        '- Structure longer answers with a short intro, then numbered points. Use markdown **bold** only for short labels at the start of each numbered point (e.g. **Life:** …).\n' +
+        '- Stay warm and factual. Keep replies under about 160 words unless the user asks for detail.'
       );
     }
 
-    function buildApiMessages() {
+    function buildGeminiContents() {
       const msgs = chatHistory.map((m) => ({
-        role: m.role === 'assistant' ? 'assistant' : 'user',
-        content: m.content,
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }],
       }));
-      if (msgs.length && msgs[0].role === 'assistant') {
+      if (msgs.length && msgs[0].role === 'model') {
         msgs.unshift({
           role: 'user',
-          content:
-            'I have completed the insurance needs questionnaire and I am viewing my results on the Bajaj Capital analyser. Please answer my follow-up questions using that context.',
+          parts: [
+            {
+              text:
+                'I have completed the insurance needs questionnaire and I am viewing my results on the Bajaj Capital analyser. Please answer my follow-up questions using that context.',
+            },
+          ],
         });
       }
       return msgs;
@@ -1248,7 +1372,8 @@
       const errEl = document.getElementById('chatError');
       errEl.hidden = true;
       if (!API_KEY || !API_KEY.trim()) {
-        errEl.textContent = 'Add your Anthropic API key in the API_KEY constant at the top of the script to enable chat.';
+        errEl.textContent =
+          'Add your Gemini API key in the API_KEY constant at the top of the script (Google AI Studio) to enable chat.';
         errEl.hidden = false;
         return;
       }
@@ -1257,24 +1382,25 @@
       appendMessage('user', userText);
       chatHistory.push({ role: 'user', content: userText });
 
-      const apiMessages = buildApiMessages();
+      const contents = buildGeminiContents();
 
       showTyping(true);
       document.getElementById('chatSend').disabled = true;
 
       try {
-        const res = await fetch('https://api.anthropic.com/v1/messages', {
+        const url =
+          'https://generativelanguage.googleapis.com/v1beta/models/' +
+          encodeURIComponent(GEMINI_MODEL) +
+          ':generateContent?key=' +
+          encodeURIComponent(API_KEY.trim());
+
+        const res = await fetch(url, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': API_KEY.trim(),
-            'anthropic-version': '2023-06-01',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514',
-            max_tokens: 1000,
-            system: buildSystemPrompt(),
-            messages: apiMessages,
+            systemInstruction: { parts: [{ text: buildSystemPrompt() }] },
+            contents,
+            generationConfig: { maxOutputTokens: 1024 },
           }),
         });
 
@@ -1282,7 +1408,8 @@
         showTyping(false);
 
         if (!res.ok) {
-          const msg = (data.error && data.error.message) || res.statusText || 'Request failed';
+          const msg =
+            (data.error && data.error.message) || data.error?.status || res.statusText || 'Request failed';
           errEl.textContent = msg;
           errEl.hidden = false;
           chatHistory.pop();
@@ -1292,13 +1419,27 @@
           return;
         }
 
+        const cand = data.candidates && data.candidates[0];
         const text =
-          (data.content &&
-            data.content
-              .filter((b) => b.type === 'text')
-              .map((b) => b.text)
-              .join('')) ||
+          (cand &&
+            cand.content &&
+            cand.content.parts &&
+            cand.content.parts.map((p) => p.text || '').join('')) ||
           '';
+
+        if (!text) {
+          const block = data.promptFeedback && data.promptFeedback.blockReason;
+          const reason = cand && cand.finishReason && cand.finishReason !== 'STOP' ? cand.finishReason : block;
+          errEl.textContent = reason
+            ? 'Could not get a reply (' + reason + ').'
+            : 'No response text from the model. Check the API key and model name.';
+          errEl.hidden = false;
+          chatHistory.pop();
+          const box = document.getElementById('chatMessages');
+          const last = box.querySelector('.msg.user:last-child');
+          if (last) last.remove();
+          return;
+        }
 
         appendMessage('ai', text || '(No text in response)');
         chatHistory.push({ role: 'assistant', content: text || '(No text in response)' });
