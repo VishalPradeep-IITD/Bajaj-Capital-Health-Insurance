@@ -765,18 +765,18 @@
         <input type="number" id="lifeHeldInput" min="0" value="0" />
       </div>
       <div class="field">
-        <label for="healthHeldInput">Health insurance cover (INR)</label>
+        <label for="healthHeldInput">Personal health sum insured (INR), excluding employer group</label>
         <input type="number" id="healthHeldInput" min="0" value="0" />
       </div>
       <div class="field">
-        <label for="ciHeldInput">Critical illness cover (INR)</label>
+        <label for="ciHeldInput">Critical illness sum assured (INR) — personal or known rider amounts</label>
         <input type="number" id="ciHeldInput" min="0" value="0" />
       </div>
       <div class="field">
-        <label for="incomeHeldInput">Income protection cover per year (INR)</label>
+        <label for="incomeHeldInput">Personal income-protection / disability benefit per year (INR), excluding employer</label>
         <input type="number" id="incomeHeldInput" min="0" value="0" />
       </div>
-      <p class="hint">Employer cover is added automatically if toggled on in Step 2</p>
+      <p class="hint">If you selected employer cover in Step 2, enter only what you hold personally here — we add a typical employer estimate (life, health, income) so totals are not double-counted.</p>
     </div>
       <div class="actions">
         <button type="button" class="btn btn-secondary" id="backTo2">Back</button>
@@ -992,60 +992,62 @@
     }
 
     function termPremiumRate(age, smoker) {
-      let r = age < 35 ? 0.0007 : age <= 45 ? 0.001 : 0.0018;
+      let r =
+        age < 35 ? 0.0007 : age <= 45 ? 0.001 : age <= 55 ? 0.0021 : age <= 65 ? 0.0032 : 0.0045;
       if (smoker) r *= 1.5;
       return r;
     }
 
     function buildRecommendations(a) {
-      const recs = [];
       const smokerYes = a.smoker === 'Yes';
       const gapLife = Math.max(0, a.lifeNeeded - a.lifeHeld);
-      const gapHealth = Math.max(0, a.healthNeeded - a.healthHeld);
-      const gapCI = Math.max(0, a.ciNeeded - a.ciHeld);
-      const gapIncome = Math.max(0, a.incomeNeeded - a.incomeHeld);
       const employerNo = a.employerCover === 'No';
+      const candidates = [];
 
       if (a.lifePct < 80) {
         const est = Math.round(gapLife * termPremiumRate(a.age, smokerYes));
-        recs.push({
-          rank: 1,
+        candidates.push({
+          sortPct: a.lifePct,
           title: 'Term life plan',
           text:
-            'Your life cover is below the suggested benchmark. A pure term plan can close the gap cost-effectively. Estimated annual premium (indicative): ' +
+            'Your life cover is below the suggested benchmark. A pure term plan can close the gap cost-effectively. Estimated annual premium for the gap (indicative): ' +
             formatINR(est) +
-            ' — final quote depends on insurer underwriting.',
+            ' — actual premium depends on insurer underwriting, policy term, and medical assessment.',
         });
       }
       if (a.healthPct < 80) {
-        recs.push({
-          rank: recs.length + 1,
-          title: 'Super top-up health insurance',
-          text:
-            'Consider a super top-up to raise hospitalisation cover without replacing your base policy. Indicative cost: ₹3,500–₹6,000 per year depending on age and deductible.',
+        const criticalHealth = a.healthPct < 45;
+        candidates.push({
+          sortPct: a.healthPct,
+          title: criticalHealth ? 'Health — strengthen base cover' : 'Health — top-up or higher sum insured',
+          text: criticalHealth
+            ? 'Hospitalisation cover is well below the benchmark. Prioritise a family floater or individual base policy to a reasonable level first; super top-ups are easiest to justify once base cover is adequate. Premiums vary by age, family size, and city — get quotes with your advisor.'
+            : 'You are closer to the benchmark. A super top-up can raise your annual limit without replacing your base policy, or you can increase the base sum insured. Indicative super top-up premiums are often roughly ₹4,000–₹9,000 per year depending on age, deductible, and coverage — confirm with quotes.',
         });
       }
       if (a.ciPct < 50) {
-        recs.push({
-          rank: recs.length + 1,
+        candidates.push({
+          sortPct: a.ciPct,
           title: 'Critical illness rider / standalone CI',
           text:
-            'Lump-sum CI cover helps replace income during recovery. Indicative cost for a meaningful rider: ₹1,500–₹2,500 per year (varies by sum insured and term).',
+            'Lump-sum CI cover helps replace income during recovery. Indicative cost for a modest rider often falls in the ₹2,000–₹5,000 per year range depending on sum assured, age, and term — varies widely by insurer.',
         });
       }
       if (a.incomePct < 60 && employerNo) {
-        recs.push({
-          rank: recs.length + 1,
+        candidates.push({
+          sortPct: a.incomePct,
           title: 'Income protection benefit',
           text:
-            'With no employer group safety net, protecting a share of income against disability is important. Explore income-protection riders or standalone plans with your advisor.',
+            'With no employer group safety net, protecting a share of income against disability matters. Explore income-protection riders or standalone plans; definitions (accident vs illness) and waiting periods differ, so review with your advisor.',
         });
       }
 
-      recs.forEach((r, i) => {
-        r.rank = i + 1;
-      });
-      return recs;
+      candidates.sort((x, y) => x.sortPct - y.sortPct);
+      return candidates.map((c, i) => ({
+        rank: i + 1,
+        title: c.title,
+        text: c.text,
+      }));
     }
 
     function countGaps(a) {
