@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Insurance Needs Analyser — Bajaj Capital</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23003399' d='M16 2L4 7v9c0 6.5 5.2 12.4 12 14 6.8-1.6 12-7.5 12-14V7L16 2zm0 4.2l8 3.3v6.7c0 4.8-3.6 9.2-8 10.6-4.4-1.4-8-5.8-8-10.6V9.5l8-3.3z'/%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --brand: #003399;
+      --brand-light: #1a4db3;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-500: #6b7280;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --green: #059669;
+      --amber: #d97706;
+      --red: #dc2626;
+      --ai-bg: #f3f4f6;
+      --user-bg: #003399;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-900);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 1rem 1rem 3rem;
+    }
+
+    header.brand {
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+
+    header.brand h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--brand);
+      margin: 0 0 0.25rem;
+    }
+
+    header.brand p {
+      margin: 0;
+      font-size: 0.875rem;
+      color: var(--gray-500);
+    }
+
+    .progress-wrap {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .progress-steps {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      font-size: 0.75rem;
+      color: var(--gray-500);
+    }
+
+    .progress-steps span {
+      flex: 1;
+      text-align: center;
+    }
+
+    .progress-steps span.active {
+      color: var(--brand);
+      font-weight: 600;
+    }
+
+    .progress-steps span.done {
+      color: var(--green);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--gray-200);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--brand);
+      border-radius: 999px;
+      width: 25%;
+      transition: width 0.35s ease;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .card h2 {
+      font-size: 1.1rem;
+      margin: 0 0 1rem;
+      color: var(--gray-900);
+    }
+
+    .field {
+      margin-bottom: 1.1rem;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--gray-700);
+      margin-bottom: 0.35rem;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    input:focus,
+    select:focus {
+      outline: 2px solid var(--brand);
+      outline-offset: 1px;
+    }
+
+    .hint {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      margin-top: 0.35rem;
+    }
+
+    .toggle-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .toggle-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--gray-200);
+      border-radius: 999px;
+      background: #fff;
+      font-size: 0.875rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+
+    .toggle-btn:hover {
+      border-color: var(--brand-light);
+    }
+
+    .toggle-btn.selected {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 1.25rem;
+    }
+
+    .btn {
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.92;
+    }
+
+    .btn-secondary {
+      background: var(--gray-100);
+      color: var(--gray-700);
+      border: 1px solid var(--gray-200);
+    }
+
+    .btn-secondary:hover {
+      background: var(--gray-200);
+    }
+
+    .step-panel {
+      display: none;
+    }
+
+    .step-panel.active {
+      display: block;
+    }
+
+    /* Results */
+    .results-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      text-align: center;
+      padding: 0.5rem 0 1rem;
+    }
+
+    .ring-wrap {
+      position: relative;
+      width: 160px;
+      height: 160px;
+    }
+
+    .ring-wrap svg {
+      transform: rotate(-90deg);
+      width: 160px;
+      height: 160px;
+    }
+
+    .ring-bg {
+      fill: none;
+      stroke: var(--gray-200);
+      stroke-width: 10;
+    }
+
+    .ring-fill {
+      fill: none;
+      stroke-width: 10;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.8s ease, stroke 0.4s ease;
+    }
+
+    .ring-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .ring-label .score-num {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--gray-900);
+      line-height: 1;
+    }
+
+    .ring-label .score-sub {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      margin-top: 0.25rem;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 520px) {
+      .stat-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stat-box {
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 0.85rem;
+      text-align: center;
+      background: var(--gray-50);
+    }
+
+    .stat-box .label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--gray-500);
+      margin-bottom: 0.35rem;
+    }
+
+    .stat-box .value {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--brand);
+      word-break: break-word;
+    }
+
+    .gap-item {
+      margin-bottom: 1.25rem;
+    }
+
+    .gap-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .gap-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .gap-title {
+      font-weight: 600;
+      font-size: 0.9375rem;
+    }
+
+    .pill {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid var(--gray-200);
+    }
+
+    .pill.adequate {
+      background: #ecfdf5;
+      color: var(--green);
+      border-color: #a7f3d0;
+    }
+
+    .pill.low {
+      background: #fffbeb;
+      color: var(--amber);
+      border-color: #fde68a;
+    }
+
+    .pill.critical {
+      background: #fef2f2;
+      color: var(--red);
+      border-color: #fecaca;
+    }
+
+    .pill.none {
+      background: var(--gray-100);
+      color: var(--gray-500);
+      border-color: var(--gray-200);
+    }
+
+    .gap-track {
+      height: 10px;
+      background: var(--gray-200);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .gap-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.7s ease, background 0.35s ease;
+      max-width: 100%;
+    }
+
+    .gap-fill.green {
+      background: var(--green);
+    }
+
+    .gap-fill.amber {
+      background: var(--amber);
+    }
+
+    .gap-fill.red {
+      background: var(--red);
+    }
+
+    .gap-note {
+      font-size: 0.8125rem;
+      color: var(--gray-500);
+      margin-top: 0.35rem;
+    }
+
+    .rec-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .rec-list li {
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      margin-bottom: 0.65rem;
+      font-size: 0.875rem;
+      background: #fff;
+    }
+
+    .rec-list li strong {
+      color: var(--brand);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .success-card {
+      border: 1px solid #a7f3d0;
+      background: #ecfdf5;
+      color: var(--gray-700);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9375rem;
+    }
+
+    /* Chat */
+    .chat-section {
+      margin-top: 1.5rem;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .chat-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--brand);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+      flex-shrink: 0;
+    }
+
+    .chat-header-text h3 {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--gray-900);
+    }
+
+    .chat-header-text span {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+    }
+
+    .chat-messages {
+      max-height: 320px;
+      overflow-y: auto;
+      padding: 0.5rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .msg {
+      max-width: 88%;
+      padding: 0.65rem 0.85rem;
+      border-radius: 12px;
+      font-size: 0.875rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .msg.ai {
+      align-self: flex-start;
+      background: var(--ai-bg);
+      color: var(--gray-900);
+      border-bottom-left-radius: 4px;
+    }
+
+    .msg.user {
+      align-self: flex-end;
+      background: var(--user-bg);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+
+    .typing {
+      display: flex;
+      gap: 4px;
+      padding: 0.75rem 1rem;
+      background: var(--ai-bg);
+      border-radius: 12px;
+      align-self: flex-start;
+      width: fit-content;
+    }
+
+    .typing span {
+      width: 6px;
+      height: 6px;
+      background: var(--gray-500);
+      border-radius: 50%;
+      animation: bounce 1.2s ease infinite;
+    }
+
+    .typing span:nth-child(2) {
+      animation-delay: 0.15s;
+    }
+
+    .typing span:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
+    @keyframes bounce {
+      0%, 80%, 100% {
+        transform: translateY(0);
+        opacity: 0.5;
+      }
+      40% {
+        transform: translateY(-5px);
+        opacity: 1;
+      }
+    }
+
+    .quick-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.75rem 0;
+    }
+
+    .chip {
+      font-size: 0.75rem;
+      padding: 0.4rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid var(--gray-200);
+      background: #fff;
+      cursor: pointer;
+      font-family: inherit;
+      color: var(--brand);
+      font-weight: 500;
+    }
+
+    .chip:hover {
+      border-color: var(--brand);
+      background: #f0f4ff;
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .chat-input-row input {
+      flex: 1;
+      margin: 0;
+    }
+
+    .chat-error {
+      font-size: 0.75rem;
+      color: var(--red);
+      margin-top: 0.5rem;
+    }
+
+    .reset-wrap {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--gray-200);
+    }
+
+    .crm-note {
+      font-size: 0.75rem;
+      color: var(--gray-500);
+      font-style: italic;
+      margin-top: -0.5rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="brand">
+      <h1>Bajaj Capital</h1>
+      <p>Insurance Needs Analyser</p>
+    </header>
+
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-steps" id="progressSteps">
+        <span data-step="1" class="active">1. Personal</span>
+        <span data-step="2">2. Income</span>
+        <span data-step="3">3. Cover</span>
+        <span data-step="4">4. Results</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="card step-panel active" id="step1" data-step="1">
+      <h2>Personal details</h2>
+      <div class="field">
+        <label for="fullName">Full name</label>
+        <input type="text" id="fullName" placeholder="As per PAN / Aadhaar" autocomplete="name" />
+      </div>
+      <div class="field">
+        <label for="age">Age</label>
+        <input type="number" id="age" min="18" max="100" value="30" />
+      </div>
+      <div class="field">
+        <label for="cityType">City type</label>
+        <select id="cityType">
+          <option value="metro">Metro</option>
+          <option value="tier23">Tier 2–3</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Gender</label>
+        <div class="toggle-group" id="genderGroup">
+          <button type="button" class="toggle-btn selected" data-value="Male">Male</button>
+          <button type="button" class="toggle-btn" data-value="Female">Female</button>
+          <button type="button" class="toggle-btn" data-value="Other">Other</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Smoker</label>
+        <div class="toggle-group" id="smokerGroup">
+          <button type="button" class="toggle-btn selected" data-value="no">No</button>
+          <button type="button" class="toggle-btn" data-value="yes">Yes</button>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="toStep2">Continue</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="card step-panel" id="step2" data-step="2">
+      <h2>Income &amp; family</h2>
+      <div class="field">
+        <label for="annualIncome">Annual income (INR)</label>
+        <input type="number" id="annualIncome" min="0" value="1200000" />
+      </div>
+      <div class="field">
+        <label for="dependants">Number of dependants</label>
+        <input type="number" id="dependants" min="0" value="2" />
+      </div>
+      <div class="field">
+        <label for="loans">Outstanding loans (INR)</label>
+        <input type="number" id="loans" min="0" value="0" />
+      </div>
+      <div class="field">
+        <label>Employer group cover</label>
+        <div class="toggle-group" id="employerGroup">
+          <button type="button" class="toggle-btn" data-value="no">No</button>
+          <button type="button" class="toggle-btn selected" data-value="yes">Yes</button>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" id="backTo1">Back</button>
+        <button type="button" class="btn btn-primary" id="toStep3">Continue</button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="card step-panel" id="step3" data-step="3">
+      <h2>Existing cover</h2>
+      <p class="crm-note">Data pre-filled from CRM in the live version — confirm or update below</p>
+      <div class="field">
+        <label for="lifeHeldInput">Personally purchased life / term sum assured (INR)</label>
+        <input type="number" id="lifeHeldInput" min="0" value="0" />
+      </div>
+      <div class="field">
+        <label for="healthHeldInput">Health insurance cover (INR)</label>
+        <input type="number" id="healthHeldInput" min="0" value="0" />
+      </div>
+      <div class="field">
+        <label for="ciHeldInput">Critical illness cover (INR)</label>
+        <input type="number" id="ciHeldInput" min="0" value="0" />
+      </div>
+      <div class="field">
+        <label for="incomeHeldInput">Income protection cover per year (INR)</label>
+        <input type="number" id="incomeHeldInput" min="0" value="0" />
+      </div>
+      <p class="hint">Employer cover is added automatically if toggled on in Step 2</p>
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" id="backTo2">Back</button>
+        <button type="button" class="btn btn-primary" id="toResults">See results</button>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="card step-panel" id="step4" data-step="4">
+      <h2>Your protection snapshot</h2>
+      <div class="results-hero">
+        <div class="ring-wrap">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <circle class="ring-bg" cx="50" cy="50" r="42" />
+            <circle class="ring-fill" id="ringFill" cx="50" cy="50" r="42" />
+          </svg>
+          <div class="ring-label">
+            <span class="score-num" id="scoreNum">0</span>
+            <span class="score-sub">Protection score</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="label">Life cover needed</div>
+          <div class="value" id="statLife">₹0</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">Health cover needed</div>
+          <div class="value" id="statHealth">₹0</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">CI cover needed</div>
+          <div class="value" id="statCI">₹0</div>
+        </div>
+      </div>
+
+      <h3 style="font-size:0.95rem;margin:1rem 0 0.75rem;">Coverage by dimension</h3>
+      <div id="gapBars"></div>
+
+      <h3 style="font-size:0.95rem;margin:1.25rem 0 0.75rem;">Recommendations</h3>
+      <ul class="rec-list" id="recList"></ul>
+
+      <div class="chat-section card" style="margin-top:1rem;padding:1rem;border:1px solid var(--gray-200);">
+        <div class="chat-header">
+          <div class="chat-avatar">BC</div>
+          <div class="chat-header-text">
+            <h3>Bajaj Capital AI Advisor</h3>
+            <span>Ask about your gaps and next steps</span>
+          </div>
+        </div>
+        <div class="quick-chips" id="quickChips">
+          <button type="button" class="chip" data-q="Biggest gap?">Biggest gap?</button>
+          <button type="button" class="chip" data-q="Total cost?">Total cost?</button>
+          <button type="button" class="chip" data-q="Priority order?">Priority order?</button>
+          <button type="button" class="chip" data-q="Why life cover?">Why life cover?</button>
+          <button type="button" class="chip" data-q="Is CI cover necessary?">Is CI cover necessary?</button>
+        </div>
+        <div class="chat-messages" id="chatMessages" aria-live="polite"></div>
+        <div class="chat-input-row">
+          <input type="text" id="chatInput" placeholder="Type your question…" autocomplete="off" />
+          <button type="button" class="btn btn-primary" id="chatSend">Send</button>
+        </div>
+        <p class="chat-error" id="chatError" hidden></p>
+      </div>
+
+      <div class="actions" style="margin-top:1rem;">
+        <button type="button" class="btn btn-secondary" id="backTo3">Edit inputs</button>
+      </div>
+    </div>
+
+    <div class="reset-wrap">
+      <button type="button" class="btn btn-secondary" id="resetAll">Analyse another customer</button>
+    </div>
+  </div>
+
+  <script>
+    const API_KEY = ''; // Paste your Anthropic API key here
+
+    const CIRCUMFERENCE = 2 * Math.PI * 42;
+
+    let currentStep = 1;
+    let analysis = null;
+    let chatHistory = [];
+
+    function formatINR(n) {
+      const x = Number(n) || 0;
+      return '₹' + Math.round(x).toLocaleString('en-IN');
+    }
+
+    function bindToggleGroup(containerId, onChange) {
+      const el = document.getElementById(containerId);
+      el.querySelectorAll('.toggle-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          el.querySelectorAll('.toggle-btn').forEach((b) => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          if (onChange) onChange(btn.dataset.value);
+        });
+      });
+    }
+
+    function getToggleValue(containerId) {
+      const sel = document.querySelector('#' + containerId + ' .toggle-btn.selected');
+      return sel ? sel.dataset.value : '';
+    }
+
+    bindToggleGroup('genderGroup');
+    bindToggleGroup('smokerGroup');
+    bindToggleGroup('employerGroup');
+
+    function setStep(n) {
+      currentStep = n;
+      document.querySelectorAll('.step-panel').forEach((p) => {
+        p.classList.toggle('active', Number(p.dataset.step) === n);
+      });
+      const pct = n <= 4 ? (n / 4) * 100 : 100;
+      document.getElementById('progressFill').style.width = pct + '%';
+
+      document.querySelectorAll('.progress-steps span').forEach((s) => {
+        const sn = Number(s.dataset.step);
+        s.classList.remove('active', 'done');
+        if (sn === n) s.classList.add('active');
+        else if (sn < n) s.classList.add('done');
+      });
+
+      if (n === 4 && analysis) {
+        requestAnimationFrame(() => renderResultsVisuals());
+      }
+    }
+
+    function collectForm() {
+      const age = Math.max(18, Math.min(100, parseInt(document.getElementById('age').value, 10) || 30));
+      const annualIncome = Math.max(0, parseFloat(document.getElementById('annualIncome').value) || 0);
+      const dependants = Math.max(0, parseInt(document.getElementById('dependants').value, 10) || 0);
+      const loans = Math.max(0, parseFloat(document.getElementById('loans').value) || 0);
+      const employerYes = getToggleValue('employerGroup') === 'yes';
+      const smokerYes = getToggleValue('smokerGroup') === 'yes';
+      const cityMetro = document.getElementById('cityType').value === 'metro';
+
+      const lifeInput = Math.max(0, parseFloat(document.getElementById('lifeHeldInput').value) || 0);
+      const healthInput = Math.max(0, parseFloat(document.getElementById('healthHeldInput').value) || 0);
+      const ciInput = Math.max(0, parseFloat(document.getElementById('ciHeldInput').value) || 0);
+      const incomeInput = Math.max(0, parseFloat(document.getElementById('incomeHeldInput').value) || 0);
+
+      const lifeNeeded = (dependants > 0 ? 8 * annualIncome : 5 * annualIncome) + loans;
+      const healthNeeded = cityMetro ? 1000000 : 600000;
+      const ciNeeded = 2 * annualIncome;
+      const incomeNeeded = employerYes ? 0.5 * annualIncome : 0.8 * annualIncome;
+
+      let lifeHeld = lifeInput;
+      let healthHeld = healthInput;
+      const ciHeld = ciInput;
+      let incomeHeld = incomeInput;
+
+      if (employerYes) {
+        lifeHeld += 2 * annualIncome;
+        healthHeld += 300000;
+        incomeHeld += 0.5 * annualIncome;
+      }
+
+      function coveragePct(held, needed) {
+        if (needed <= 0) return 100;
+        return Math.min(100, (held / needed) * 100);
+      }
+
+      const lifePct = coveragePct(lifeHeld, lifeNeeded);
+      const healthPct = coveragePct(healthHeld, healthNeeded);
+      const ciPct = coveragePct(ciHeld, ciNeeded);
+      const incomePct = coveragePct(incomeHeld, incomeNeeded);
+
+      const overallScore = Math.round((lifePct + healthPct + ciPct + incomePct) / 4);
+
+      return {
+        fullName: document.getElementById('fullName').value.trim() || 'Customer',
+        age,
+        gender: getToggleValue('genderGroup') || 'Male',
+        smoker: smokerYes ? 'Yes' : 'No',
+        city: cityMetro ? 'Metro' : 'Tier 2–3',
+        annualIncome,
+        dependants,
+        loans,
+        employerCover: employerYes ? 'Yes' : 'No',
+        lifeNeeded,
+        healthNeeded,
+        ciNeeded,
+        incomeNeeded,
+        lifeHeld,
+        healthHeld,
+        ciHeld,
+        incomeHeld,
+        lifePct,
+        healthPct,
+        ciPct,
+        incomePct,
+        overallScore,
+      };
+    }
+
+    function badgeFor(pct) {
+      if (pct <= 0) return { label: 'Not covered', cls: 'none', bar: 'red' };
+      if (pct < 45) return { label: 'Critical', cls: 'critical', bar: 'red' };
+      if (pct < 80) return { label: 'Low', cls: 'low', bar: 'amber' };
+      return { label: 'Adequate', cls: 'adequate', bar: 'green' };
+    }
+
+    function barColorClass(pct) {
+      if (pct >= 70) return 'green';
+      if (pct >= 45) return 'amber';
+      return 'red';
+    }
+
+    function termPremiumRate(age, smoker) {
+      let r = age < 35 ? 0.0007 : age <= 45 ? 0.001 : 0.0018;
+      if (smoker) r *= 1.5;
+      return r;
+    }
+
+    function buildRecommendations(a) {
+      const recs = [];
+      const smokerYes = a.smoker === 'Yes';
+      const gapLife = Math.max(0, a.lifeNeeded - a.lifeHeld);
+      const gapHealth = Math.max(0, a.healthNeeded - a.healthHeld);
+      const gapCI = Math.max(0, a.ciNeeded - a.ciHeld);
+      const gapIncome = Math.max(0, a.incomeNeeded - a.incomeHeld);
+      const employerNo = a.employerCover === 'No';
+
+      if (a.lifePct < 80) {
+        const est = Math.round(gapLife * termPremiumRate(a.age, smokerYes));
+        recs.push({
+          rank: 1,
+          title: 'Term life plan',
+          text:
+            'Your life cover is below the suggested benchmark. A pure term plan can close the gap cost-effectively. Estimated annual premium (indicative): ' +
+            formatINR(est) +
+            ' — final quote depends on insurer underwriting.',
+        });
+      }
+      if (a.healthPct < 80) {
+        recs.push({
+          rank: recs.length + 1,
+          title: 'Super top-up health insurance',
+          text:
+            'Consider a super top-up to raise hospitalisation cover without replacing your base policy. Indicative cost: ₹3,500–₹6,000 per year depending on age and deductible.',
+        });
+      }
+      if (a.ciPct < 50) {
+        recs.push({
+          rank: recs.length + 1,
+          title: 'Critical illness rider / standalone CI',
+          text:
+            'Lump-sum CI cover helps replace income during recovery. Indicative cost for a meaningful rider: ₹1,500–₹2,500 per year (varies by sum insured and term).',
+        });
+      }
+      if (a.incomePct < 60 && employerNo) {
+        recs.push({
+          rank: recs.length + 1,
+          title: 'Income protection benefit',
+          text:
+            'With no employer group safety net, protecting a share of income against disability is important. Explore income-protection riders or standalone plans with your advisor.',
+        });
+      }
+
+      recs.forEach((r, i) => {
+        r.rank = i + 1;
+      });
+      return recs;
+    }
+
+    function countGaps(a) {
+      let n = 0;
+      if (a.lifePct < 80) n++;
+      if (a.healthPct < 80) n++;
+      if (a.ciPct < 50) n++;
+      if (a.incomePct < 60 && a.employerCover === 'No') n++;
+      return n;
+    }
+
+    function renderGapBars(a) {
+      const dims = [
+        { key: 'life', title: 'Life / term cover', pct: a.lifePct, held: a.lifeHeld, needed: a.lifeNeeded },
+        { key: 'health', title: 'Health insurance', pct: a.healthPct, held: a.healthHeld, needed: a.healthNeeded },
+        { key: 'ci', title: 'Critical illness', pct: a.ciPct, held: a.ciHeld, needed: a.ciNeeded },
+        { key: 'income', title: 'Income protection', pct: a.incomePct, held: a.incomeHeld, needed: a.incomeNeeded },
+      ];
+      const html = dims
+        .map((d) => {
+          const b = badgeFor(d.pct);
+          const barCls = barColorClass(d.pct);
+          const w = Math.min(100, d.pct);
+          return (
+            '<div class="gap-item">' +
+            '<div class="gap-head"><span class="gap-title">' +
+            d.title +
+            '</span><span class="pill ' +
+            b.cls +
+            '">' +
+            b.label +
+            '</span></div>' +
+            '<div class="gap-track"><div class="gap-fill ' +
+            barCls +
+            '" style="width:' +
+            w +
+            '%"></div></div>' +
+            '<p class="gap-note">' +
+            Math.round(d.pct) +
+            '% covered · You hold ' +
+            formatINR(d.held) +
+            ' vs benchmark ' +
+            formatINR(d.needed) +
+            '</p></div>'
+          );
+        })
+        .join('');
+      document.getElementById('gapBars').innerHTML = html;
+    }
+
+    function renderRecommendations(recs) {
+      const ul = document.getElementById('recList');
+      if (!recs.length) {
+        ul.innerHTML =
+          '<li class="success-card"><strong>Cover looks adequate</strong>Based on your inputs, you are close to or above our indicative benchmarks across dimensions. Review annually as income and liabilities change.</li>';
+        return;
+      }
+      ul.innerHTML = recs
+        .map(
+          (r) =>
+            '<li><strong>' +
+            r.rank +
+            '. ' +
+            r.title +
+            '</strong>' +
+            r.text +
+            '</li>'
+        )
+        .join('');
+    }
+
+    function ringColor(score) {
+      if (score >= 70) return '#059669';
+      if (score >= 45) return '#d97706';
+      return '#dc2626';
+    }
+
+    function renderResultsVisuals() {
+      if (!analysis) return;
+      const a = analysis;
+      const score = a.overallScore;
+      document.getElementById('scoreNum').textContent = score;
+      document.getElementById('statLife').textContent = formatINR(a.lifeNeeded);
+      document.getElementById('statHealth').textContent = formatINR(a.healthNeeded);
+      document.getElementById('statCI').textContent = formatINR(a.ciNeeded);
+
+      const ring = document.getElementById('ringFill');
+      ring.setAttribute('stroke', ringColor(score));
+      ring.style.strokeDasharray = CIRCUMFERENCE + ' ' + CIRCUMFERENCE;
+      const offset = CIRCUMFERENCE - (CIRCUMFERENCE * score) / 100;
+      ring.style.strokeDashoffset = CIRCUMFERENCE;
+      requestAnimationFrame(() => {
+        ring.style.strokeDashoffset = offset;
+      });
+
+      renderGapBars(a);
+    }
+
+    function runAnalysis() {
+      analysis = collectForm();
+      analysis.recommendations = buildRecommendations(analysis);
+      analysis.gapCount = countGaps(analysis);
+      setStep(4);
+      renderResultsVisuals();
+      renderRecommendations(analysis.recommendations);
+      chatHistory = [];
+      document.getElementById('chatMessages').innerHTML = '';
+      document.getElementById('chatError').hidden = true;
+      queueOpeningMessage();
+    }
+
+    function topGapSummary(a) {
+      const items = [
+        { name: 'life', pct: a.lifePct },
+        { name: 'health', pct: a.healthPct },
+        { name: 'critical illness', pct: a.ciPct },
+        { name: 'income protection', pct: a.incomePct },
+      ];
+      items.sort((x, y) => x.pct - y.pct);
+      const worst = items[0];
+      return { worstLabel: worst.name, worstPct: Math.round(worst.pct) };
+    }
+
+    function openingMessageText() {
+      const a = analysis;
+      const { worstLabel, worstPct } = topGapSummary(a);
+      return (
+        'Hello' +
+        (a.fullName ? ', ' + a.fullName.split(' ')[0] : '') +
+        '! Your overall protection score is ' +
+        a.overallScore +
+        '/100. The largest gap right now appears to be ' +
+        worstLabel +
+        ' coverage at about ' +
+        worstPct +
+        '% of the benchmark. Use the quick questions below or type your own — I can explain what to prioritise and typical Indian product options in simple terms.'
+      );
+    }
+
+    function queueOpeningMessage() {
+      const text = openingMessageText();
+      appendMessage('ai', text);
+      chatHistory.push({ role: 'assistant', content: text });
+    }
+
+    function appendMessage(role, text) {
+      const box = document.getElementById('chatMessages');
+      const div = document.createElement('div');
+      div.className = 'msg ' + (role === 'user' ? 'user' : 'ai');
+      div.textContent = text;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function showTyping(show) {
+      let el = document.getElementById('typingIndicator');
+      if (show) {
+        if (!el) {
+          el = document.createElement('div');
+          el.id = 'typingIndicator';
+          el.className = 'typing';
+          el.innerHTML = '<span></span><span></span><span></span>';
+          el.setAttribute('aria-label', 'Advisor is typing');
+        }
+        document.getElementById('chatMessages').appendChild(el);
+        el.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      } else if (el && el.parentNode) {
+        el.parentNode.removeChild(el);
+      }
+    }
+
+    function buildSystemPrompt() {
+      const a = analysis;
+      const recLines = (a.recommendations || []).map((r) => r.title + ': ' + r.text).join('\n');
+      return (
+        'You are an insurance guidance assistant for Bajaj Capital customers in India.\n\n' +
+        'Customer profile:\n' +
+        '- Name: ' +
+        a.fullName +
+        '\n' +
+        '- Age: ' +
+        a.age +
+        '\n' +
+        '- Gender: ' +
+        a.gender +
+        '\n' +
+        '- Smoker: ' +
+        a.smoker +
+        '\n' +
+        '- City type: ' +
+        a.city +
+        '\n' +
+        '- Annual income (INR): ' +
+        Math.round(a.annualIncome).toLocaleString('en-IN') +
+        '\n' +
+        '- Dependants: ' +
+        a.dependants +
+        '\n' +
+        '- Outstanding loans (INR): ' +
+        Math.round(a.loans).toLocaleString('en-IN') +
+        '\n' +
+        '- Employer group cover: ' +
+        a.employerCover +
+        '\n\n' +
+        'Gap analysis (held vs needed, coverage %):\n' +
+        '- Life: held ' +
+        Math.round(a.lifeHeld).toLocaleString('en-IN') +
+        ', needed ' +
+        Math.round(a.lifeNeeded).toLocaleString('en-IN') +
+        ', ' +
+        Math.round(a.lifePct) +
+        '%\n' +
+        '- Health: held ' +
+        Math.round(a.healthHeld).toLocaleString('en-IN') +
+        ', needed ' +
+        Math.round(a.healthNeeded).toLocaleString('en-IN') +
+        ', ' +
+        Math.round(a.healthPct) +
+        '%\n' +
+        '- Critical illness: held ' +
+        Math.round(a.ciHeld).toLocaleString('en-IN') +
+        ', needed ' +
+        Math.round(a.ciNeeded).toLocaleString('en-IN') +
+        ', ' +
+        Math.round(a.ciPct) +
+        '%\n' +
+        '- Income protection: held ' +
+        Math.round(a.incomeHeld).toLocaleString('en-IN') +
+        ', needed ' +
+        Math.round(a.incomeNeeded).toLocaleString('en-IN') +
+        ', ' +
+        Math.round(a.incomePct) +
+        '%\n\n' +
+        'Overall protection score (0–100): ' +
+        a.overallScore +
+        '\n' +
+        'Number of priority gaps (by internal rules): ' +
+        a.gapCount +
+        '\n\n' +
+        'Top recommendations already shown to the customer:\n' +
+        (recLines || 'None — cover looks adequate.') +
+        '\n\n' +
+        'Answer questions about this customer\'s insurance gaps in simple, warm language. Use Indian context (INR, Indian products). Keep replies under 120 words.'
+      );
+    }
+
+    function buildApiMessages() {
+      const msgs = chatHistory.map((m) => ({
+        role: m.role === 'assistant' ? 'assistant' : 'user',
+        content: m.content,
+      }));
+      if (msgs.length && msgs[0].role === 'assistant') {
+        msgs.unshift({
+          role: 'user',
+          content:
+            'I have completed the insurance needs questionnaire and I am viewing my results on the Bajaj Capital analyser. Please answer my follow-up questions using that context.',
+        });
+      }
+      return msgs;
+    }
+
+    async function sendChat(userText) {
+      const errEl = document.getElementById('chatError');
+      errEl.hidden = true;
+      if (!API_KEY || !API_KEY.trim()) {
+        errEl.textContent = 'Add your Anthropic API key in the API_KEY constant at the top of the script to enable chat.';
+        errEl.hidden = false;
+        return;
+      }
+      if (!analysis) return;
+
+      appendMessage('user', userText);
+      chatHistory.push({ role: 'user', content: userText });
+
+      const apiMessages = buildApiMessages();
+
+      showTyping(true);
+      document.getElementById('chatSend').disabled = true;
+
+      try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': API_KEY.trim(),
+            'anthropic-version': '2023-06-01',
+          },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 1000,
+            system: buildSystemPrompt(),
+            messages: apiMessages,
+          }),
+        });
+
+        const data = await res.json().catch(() => ({}));
+        showTyping(false);
+
+        if (!res.ok) {
+          const msg = (data.error && data.error.message) || res.statusText || 'Request failed';
+          errEl.textContent = msg;
+          errEl.hidden = false;
+          chatHistory.pop();
+          const box = document.getElementById('chatMessages');
+          const last = box.querySelector('.msg.user:last-child');
+          if (last) last.remove();
+          return;
+        }
+
+        const text =
+          (data.content &&
+            data.content
+              .filter((b) => b.type === 'text')
+              .map((b) => b.text)
+              .join('')) ||
+          '';
+
+        appendMessage('ai', text || '(No text in response)');
+        chatHistory.push({ role: 'assistant', content: text || '(No text in response)' });
+      } catch (e) {
+        showTyping(false);
+        errEl.textContent = e.message || 'Network error';
+        errEl.hidden = false;
+        chatHistory.pop();
+        const box = document.getElementById('chatMessages');
+        const last = box.querySelector('.msg.user:last-child');
+        if (last) last.remove();
+      } finally {
+        document.getElementById('chatSend').disabled = false;
+        document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+      }
+    }
+
+    document.getElementById('toStep2').addEventListener('click', () => setStep(2));
+    document.getElementById('backTo1').addEventListener('click', () => setStep(1));
+    document.getElementById('toStep3').addEventListener('click', () => setStep(3));
+    document.getElementById('backTo2').addEventListener('click', () => setStep(2));
+    document.getElementById('toResults').addEventListener('click', runAnalysis);
+    document.getElementById('backTo3').addEventListener('click', () => setStep(3));
+
+    document.getElementById('resetAll').addEventListener('click', () => {
+      analysis = null;
+      chatHistory = [];
+      document.getElementById('chatMessages').innerHTML = '';
+      document.getElementById('gapBars').innerHTML = '';
+      document.getElementById('recList').innerHTML = '';
+      document.getElementById('scoreNum').textContent = '0';
+      document.getElementById('statLife').textContent = '₹0';
+      document.getElementById('statHealth').textContent = '₹0';
+      document.getElementById('statCI').textContent = '₹0';
+      const ring = document.getElementById('ringFill');
+      if (ring) {
+        ring.style.strokeDasharray = CIRCUMFERENCE + ' ' + CIRCUMFERENCE;
+        ring.style.strokeDashoffset = CIRCUMFERENCE;
+      }
+      document.getElementById('chatInput').value = '';
+      document.getElementById('chatError').hidden = true;
+      document.getElementById('fullName').value = '';
+      document.getElementById('age').value = '30';
+      document.getElementById('cityType').value = 'metro';
+      document.getElementById('annualIncome').value = '1200000';
+      document.getElementById('dependants').value = '2';
+      document.getElementById('loans').value = '0';
+      document.getElementById('lifeHeldInput').value = '0';
+      document.getElementById('healthHeldInput').value = '0';
+      document.getElementById('ciHeldInput').value = '0';
+      document.getElementById('incomeHeldInput').value = '0';
+
+      document.querySelectorAll('#genderGroup .toggle-btn').forEach((b) => b.classList.remove('selected'));
+      document.querySelector('#genderGroup .toggle-btn[data-value="Male"]').classList.add('selected');
+      document.querySelectorAll('#smokerGroup .toggle-btn').forEach((b) => b.classList.remove('selected'));
+      document.querySelector('#smokerGroup .toggle-btn[data-value="no"]').classList.add('selected');
+      document.querySelectorAll('#employerGroup .toggle-btn').forEach((b) => b.classList.remove('selected'));
+      document.querySelector('#employerGroup .toggle-btn[data-value="yes"]').classList.add('selected');
+
+      setStep(1);
+    });
+
+    document.getElementById('chatSend').addEventListener('click', () => {
+      const inp = document.getElementById('chatInput');
+      const t = inp.value.trim();
+      if (!t) return;
+      inp.value = '';
+      sendChat(t);
+    });
+
+    document.getElementById('chatInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        document.getElementById('chatSend').click();
+      }
+    });
+
+    document.getElementById('quickChips').addEventListener('click', (e) => {
+      const btn = e.target.closest('.chip');
+      if (!btn) return;
+      const q = btn.getAttribute('data-q');
+      if (q) sendChat(q);
+    });
+
+    // Initial progress
+    setStep(1);
+  </script>
+</body>
+</html>
