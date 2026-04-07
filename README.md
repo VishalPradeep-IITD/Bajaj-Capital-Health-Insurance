@@ -1,49 +1,30 @@
-# Bajaj Capital Health Insurance — Next.js App
+# Bajaj Capital Health Insurance — GitHub Pages Build
 
-Insurance Needs Analyser migrated to Next.js with a server-side Gemini API route.
+Single-page Insurance Needs Analyser hosted as static files (`index.html`).
 
-## What changed
+## Deploy to GitHub Pages
 
-- Frontend UI remains your existing analyzer (`index.html`) and is rendered at `/` inside Next.js.
-- Chat now calls a same-origin API route: `/api/chat`.
-- Gemini key is stored only on the server as `GEMINI_API_KEY` (never in frontend code).
+Publish this repository (or the branch/folder containing `index.html`) with GitHub Pages.
 
-## Local setup
+## AI chat setup (client-side)
 
-1. Install dependencies:
+In `index.html`, set:
+
+```js
+const API_KEY = 'YOUR_GEMINI_API_KEY';
+```
+
+This enables Gemini chat directly from the browser.
+
+## Important warning
+
+Client-side keys are visible to anyone using the site (view-source/devtools/network).
+If you use this mode on GitHub Pages, treat the key as public and restrict/rotate it.
+
+## Run locally
+
+Open `index.html` directly, or serve with:
 
 ```bash
-npm install
+npx serve .
 ```
-
-2. Create env file:
-
-```bash
-cp .env.example .env.local
-```
-
-3. Add your key in `.env.local`:
-
-```env
-GEMINI_API_KEY=your_real_key_here
-```
-
-4. Start dev server:
-
-```bash
-npm run dev
-```
-
-Open `http://localhost:3000`.
-
-## Deploy
-
-Deploy this Next.js app on a platform that supports server-side API routes (for example Vercel, Netlify Functions, or Render).
-
-Set `GEMINI_API_KEY` as an environment variable in your deployment platform.
-
-## Security notes
-
-- Never commit `.env.local`.
-- Never put API keys in frontend JavaScript.
-- If any key was previously exposed, revoke/regenerate it.
