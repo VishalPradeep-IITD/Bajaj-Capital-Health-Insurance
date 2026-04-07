@@ -1,18 +1,49 @@
-# Bajaj Capital Health Insurance — Needs Analyser
+# Bajaj Capital Health Insurance — Next.js App
 
-Single-page **Insurance Needs Analyser** for Bajaj Capital: a 4-step wizard, gap analysis (life, health, critical illness, income protection), results with charts, and an optional AI advisor (Anthropic Claude) when you add an API key in `index.html`.
+Insurance Needs Analyser migrated to Next.js with a server-side Gemini API route.
 
-## Run locally
+## What changed
 
-Open `index.html` in a browser, or serve the folder over HTTP (recommended for the chat feature due to browser CORS):
+- Frontend UI remains your existing analyzer (`index.html`) and is rendered at `/` inside Next.js.
+- Chat now calls a same-origin API route: `/api/chat`.
+- Gemini key is stored only on the server as `GEMINI_API_KEY` (never in frontend code).
+
+## Local setup
+
+1. Install dependencies:
 
 ```bash
-npx serve .
+npm install
 ```
 
-## Setup
+2. Create env file:
 
-1. Open `index.html` in an editor.
-2. Set `const API_KEY = 'your-key'` in the script section for the AI advisor.
+```bash
+cp .env.example .env.local
+```
 
-Do not commit real API keys to Git.
+3. Add your key in `.env.local`:
+
+```env
+GEMINI_API_KEY=your_real_key_here
+```
+
+4. Start dev server:
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+## Deploy
+
+Deploy this Next.js app on a platform that supports server-side API routes (for example Vercel, Netlify Functions, or Render).
+
+Set `GEMINI_API_KEY` as an environment variable in your deployment platform.
+
+## Security notes
+
+- Never commit `.env.local`.
+- Never put API keys in frontend JavaScript.
+- If any key was previously exposed, revoke/regenerate it.

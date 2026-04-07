@@ -856,7 +856,7 @@
   </div>
 
   <script>
-    const API_KEY = 'AIzaSyAD6HR9quQvkObiPbnSPVE4HSc_O5ZCZoc';
+    const CHAT_PROXY_URL = '/api/chat';
     const GEMINI_MODEL = 'gemini-2.5-flash-lite';
 
     const CIRCUMFERENCE = 2 * Math.PI * 42;
@@ -1372,9 +1372,9 @@
     async function sendChat(userText) {
       const errEl = document.getElementById('chatError');
       errEl.hidden = true;
-      if (!API_KEY || !API_KEY.trim()) {
+      if (!CHAT_PROXY_URL || !CHAT_PROXY_URL.trim()) {
         errEl.textContent =
-          'Add your Gemini API key in the API_KEY constant at the top of the script (Google AI Studio) to enable chat.';
+          'Chat API URL is not configured.';
         errEl.hidden = false;
         return;
       }
@@ -1389,19 +1389,13 @@
       document.getElementById('chatSend').disabled = true;
 
       try {
-        const url =
-          'https://generativelanguage.googleapis.com/v1beta/models/' +
-          encodeURIComponent(GEMINI_MODEL) +
-          ':generateContent?key=' +
-          encodeURIComponent(API_KEY.trim());
-
-        const res = await fetch(url, {
+        const res = await fetch(CHAT_PROXY_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            systemInstruction: { parts: [{ text: buildSystemPrompt() }] },
+            model: GEMINI_MODEL,
+            systemPrompt: buildSystemPrompt(),
             contents,
-            generationConfig: { maxOutputTokens: 1024 },
           }),
         });
 
@@ -1433,7 +1427,7 @@
           const reason = cand && cand.finishReason && cand.finishReason !== 'STOP' ? cand.finishReason : block;
           errEl.textContent = reason
             ? 'Could not get a reply (' + reason + ').'
-            : 'No response text from the model. Check the API key and model name.';
+            : 'No response text from the model. Check proxy setup and model name.';
           errEl.hidden = false;
           chatHistory.pop();
           const box = document.getElementById('chatMessages');
